@@ -1,0 +1,30 @@
+nav {
+    height: 50px;
+    border-bottom: 1px solid #000;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+
+    h1 {
+        font-size: 26px;
+    }
+}
+
+.form {
+    padding: 20px;
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    display: flex;
+    justify-content: space-evenly;
+    height: 50%;
+    text-align: center;
+
+    input {
+        height: 30px;
+    }
+
+    input[type="submit"] {
+        cursor: pointer;
+    }
+}
