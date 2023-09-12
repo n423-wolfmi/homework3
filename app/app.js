@@ -1,45 +1,62 @@
 function initListeners() {
+    $("#submit").on("click", () => {
+        let fn = $("#fName").val()
+        let ln = $("#lName").val()
+        let age = $("#age").val()
+        let phone = $("#phone").val()
+        let email = $("#email").val()
+        let classes = $("#classes").val().split(",")
+        let finalClassArray = []
     
+        let userObj = {
+            fName: fn,
+            lName: ln,
+            age: age,
+            phone: phone,
+            email: email,
+            classes: []
+        }
+    
+        $.each(classes, (idx, loopClass) => {
+            let trimClass = {className: loopClass.trim()}
+            finalClassArray.push(trimClass)
+        })
+    
+        userObj.classes = finalClassArray
+    
+        $("input:text").val("")
+    
+        addUser(userObj)
+    })
+    $("#getInfo").on("click", () => {
+        getUser()
+    })
 }
 
-$("#submit").on("click", (e) => {
-    e.preventDefault()
-    let fn = $("#fName").val()
-    let ln = $("#lName").val()
-    let age = $("#age").val()
-    let phone = $("#phone").val()
-    let email = $("#email").val()
-    let cs = $("#classes").val()
-    let newArrClass = cs.split(",")
-    let finalClassArray = []
+function addUser(user) {  
+    let allUsers = JSON.parse(localStorage.getItem("Students")) //array of all users
+    allUsers.push(user) //add new user to array
+    localStorage.setItem("Students", JSON.stringify(allUsers)) //store all users array to local storage
+}
 
-    let userObj = {
-        fName: fn,
-        lName: ln,
-        age: age,
-        phone: phone,
-        email: email,
-        classes: []
-    }
-
-    $.each(newArrClass, (idx, newClass) => {
-        let cl = {
-            "className": newClass.trim()
-        }
-        finalClassArray.push(cl)
+function getUser() {
+    $("#display").html("")
+    let allUsers = JSON.parse(localStorage.getItem("Students"))
+    $.each(allUsers, (idx, user) => {
+        $("#display").append(`
+            <p>First Name: ${user.fName}</p>
+            <p>Last Name: ${user.lName}</p> 
+            <p>Age: ${user.age}</p>
+            <p>Phone: ${user.phone}</p>
+            <p>Email: ${user.email}</p>
+            Classes: 
+        `)
+        $.each(user.classes, (idx, cls) => {
+            console.log(user.classes.cls)
+            $("#display").append(`<span> ${cls.className}</span>`)
+        })
     })
-
-    userObj.classes = finalClassArray
-
-    $("#firstName").val("")
-    $("#lastName").val("")
-    $("#classes").val("")
-
-    addUser(userObj)
-})
-$("#getName").on("click", (e) => {
-    getUser()
-})
+}
 
 /**
  * The function checks if localStorage is available and creates an empty "Students" array if it doesn't
@@ -50,7 +67,7 @@ $("#getName").on("click", (e) => {
 function connectToStorage() {
     if(localStorage) {
         let students = localStorage.getItem("Students")
-        if(classes) {
+        if(students) {
             return
         } else {
             localStorage.setItem("Students", "[]")
@@ -61,6 +78,6 @@ function connectToStorage() {
 }
  
 $(document).ready(function () {
-    initListeners()
     connectToStorage()
+    initListeners()
 });
