@@ -8,7 +8,7 @@ function initListeners() {
         let classes = $("#classes").val().split(",")
         let finalClassArray = []
     
-        let userObj = {
+        let studentObj = {
             fName: fn,
             lName: ln,
             age: age,
@@ -22,39 +22,47 @@ function initListeners() {
             finalClassArray.push(trimClass)
         })
     
-        userObj.classes = finalClassArray
+        studentObj.classes = finalClassArray
     
         $("input:text").val("")
     
-        addUser(userObj)
+        addStudent(studentObj)
     })
-    $("#getInfo").on("click", () => {
-        getUser()
+    $("#getStudents").on("click", () => {
+        getStudents()
     })
 }
 
-function addUser(user) {  
-    let allUsers = JSON.parse(localStorage.getItem("Students")) //array of all users
-    allUsers.push(user) //add new user to array
-    localStorage.setItem("Students", JSON.stringify(allUsers)) //store all users array to local storage
+function addStudent(student) {  
+    let allStudents = JSON.parse(localStorage.getItem("Students")) //array of all students
+    allStudents.push(student) //add new student to array
+    localStorage.setItem("Students", JSON.stringify(allStudents)) //store all students array to local storage
 }
 
-function getUser() {
-    $("#display").html("")
-    let allUsers = JSON.parse(localStorage.getItem("Students"))
-    $.each(allUsers, (idx, user) => {
+function getStudents() {
+    $("#display").html("") //clear display
+    let allStudents = JSON.parse(localStorage.getItem("Students")) //get students from local storage
+
+    //for each student, display data
+    //for each class, display class on student div
+    $.each(allStudents, (idx, student) => {
         $("#display").append(`
-            <p>First Name: ${user.fName}</p>
-            <p>Last Name: ${user.lName}</p> 
-            <p>Age: ${user.age}</p>
-            <p>Phone: ${user.phone}</p>
-            <p>Email: ${user.email}</p>
-            Classes: 
+            <div class="student" id="student${idx}">
+                <div class="studentBanner">${student.fName} ${student.lName}</div>
+                <p><b>Age:</b> ${student.age}</p>
+                <p><b>Phone:</b> ${student.phone}</p>
+                <p><b>Email:</b> ${student.email}</p>
+                <b>Classes:</b>
+            </div>
         `)
-        $.each(user.classes, (idx, cls) => {
-            console.log(user.classes.cls)
-            $("#display").append(`<span> ${cls.className}</span>`)
-        })
+        $.each(student.classes, (classIdx, cls) => {
+            let lastInArr = student.classes.slice(-1)
+            if(cls.className == lastInArr[0].className) {
+                $(`#student${idx}`).append(`<span> ${cls.className}</span>`)
+            } else {
+                $(`#student${idx}`).append(`<span> ${cls.className}, </span>`)
+            }
+        }) 
     })
 }
 
